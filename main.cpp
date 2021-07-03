@@ -25,7 +25,7 @@ void leituraNumComplexo(Complexo *numComplex){
   cout<<endl;
 }
 
-void imprimeNumComplexo(Complexo *numComplex, char op){
+/*void imprimeNumComplexo(Complexo *numComplex, char op){
   if(op == '|'){
     cout<<"\n"<< numComplex -> real;
   }else{
@@ -35,52 +35,8 @@ void imprimeNumComplexo(Complexo *numComplex, char op){
       cout<<"\n"<< numComplex -> real <<" + "<< numComplex -> imag<<"j"<<endl;
     }
   }
-}
+}*/
 
-struct Complexo* adicaoComplexos(Complexo *numComplexA, Complexo *numComplexB){
-  struct Complexo *numComplex = (struct Complexo*) malloc (sizeof(struct Complexo));
-  numComplex -> real = numComplexA -> real + numComplexB -> real;
-  numComplex -> imag = numComplexA -> imag + numComplexB -> imag;
-  return numComplex;
-}
-
-struct Complexo* subtracaoComplexos(Complexo *numComplexA, Complexo *numComplexB){
-  struct Complexo *numComplex = (struct Complexo*) malloc (sizeof(struct Complexo));
-  numComplex -> real = numComplexA -> real - numComplexB -> real;
-  numComplex -> imag = numComplexA -> imag - numComplexB -> imag;
-  return numComplex;
-}
-
-// Operacao de Multiplicacao
-// Para operações de Multiplicacao e Divisao foi usado como referencia o material do site https://www.todamateria.com.br/numeros-complexos/
-struct Complexo* multiplicacaoComplexos(Complexo *numComplexA, Complexo *numComplexB){
-  struct Complexo *numComplex = (struct Complexo*) malloc (sizeof(struct Complexo));
-  numComplex -> real = numComplexA -> real * numComplexB -> real - numComplexA -> imag * numComplexB -> imag;
-  numComplex -> imag = numComplexA -> real * numComplexB -> imag + numComplexA -> imag * numComplexB -> real;
-  return numComplex;
-}
-
-// Operacao de Multiplicacao
-// Para operações de Multiplicacao e Divisao foi usado como referencia o material do site https://www.todamateria.com.br/numeros-complexos/
-struct Complexo* divisaoComplexos(Complexo *numComplexA, Complexo *numComplexB){
-  struct Complexo *numComplex = (struct Complexo*) malloc (sizeof(struct Complexo));
-
-  if(numComplexB -> real == 0 && numComplexB -> imag == 0){
-    numComplex->real = 0;
-    numComplex->imag = 0;
-    return numComplex;
-  }else{
-    numComplex -> real = (numComplexA -> real * numComplexB -> real + numComplexA -> imag * numComplexB -> imag) / (pow(numComplexB -> real,2) + pow(numComplexB -> imag,2));
-    numComplex -> imag = (numComplexB -> real * numComplexA -> imag - numComplexB -> imag * numComplexA -> real) / (pow(numComplexB -> real,2) + pow(numComplexB -> imag,2));
-    return numComplex;
-  }
-}
-
-struct Complexo* moduloComplexo(Complexo *numComplexA){
-  struct Complexo *numComplex = (struct Complexo*) malloc (sizeof(struct Complexo));
-  numComplex -> real = sqrt( pow(numComplexA -> real,2) + pow(numComplexA -> imag,2) );
-  return numComplex;
-}
 
 /////////////////////// LISTA ///////////////////////
 
@@ -146,9 +102,9 @@ void imprimirLista (tLista* pLista){
     Complexo informacao = pLista -> marcador -> info;
     //cout<<"O numero comple : " << informacao.real <<" "<< informacao.imag<<"j"<<endl;
     if(informacao.imag < 0){
-      cout<<"\n"<< informacao.real <<" - "<< informacao.imag * -1<<"j"<<endl;
+      cout<<""<< informacao.real <<" - "<< informacao.imag * -1<<"j"<<endl;
     }else{
-      cout<<"\n"<< informacao.real <<" + "<< informacao.imag <<"j"<<endl;
+      cout<<""<< informacao.real <<" + "<< informacao.imag <<"j"<<endl;
     }
     pLista -> marcador = pLista -> marcador -> proximo;
   }
@@ -184,8 +140,7 @@ void excluirPosicao(tLista* pLista, int pos){
 int main()
 {
   
-  Complexo numA, numB, *resultado;
-  char op = ' ';
+  Complexo numA;
 
   tLista* complexos = new tLista;
 
@@ -194,76 +149,11 @@ int main()
   cout << "\nO tamanho da lista é: "<< obterTamanho(complexos)<<endl;
 
   leituraNumComplexo(&numA);
-  leituraNumComplexo(&numB);
 
   incluirNoFim(complexos, numA);
-  incluirNoFim(complexos, numB);
 
   cout << "\nO tamanho da lista é: "<< obterTamanho(complexos)<<endl;
-  //cout<<"\nInfo do ultimo elemento da lista: " <<complexos -> ultimo -> info << endl<< endl;
-
-  /*
-  // Menu de operacao. 
-  cout<< "Informe o caractere da operação que deseja realizar ou digite (s) para sair...." <<endl;
-  cout<< "\t + p/ Adicao" <<endl;
-  cout<< "\t - p/ Subtracao" <<endl;
-  cout<< "\t * p/ Multiplicacao" <<endl;
-  cout<< "\t / p/ Divisao" <<endl;
-  cout<< "\t | p/ Modulo" <<endl;
-  cout<< "\t Operacao: ";
-  cin>>op;
-  cout<<endl;
-
-  //Operaçoes iram ocorrer quantas vezes o usuario quiser, entao sera feito um laco de repeticao
-  while(op != 's' && op != 'S'){
-
-    if(op != '|'){
-      leituraNumComplexo(&numA);
-      leituraNumComplexo(&numB);
-    }else{
-      leituraNumComplexo(&numA);
-    }
-
-    switch(op){
-      case '+':
-        resultado = adicaoComplexos(&numA, &numB);
-        imprimeNumComplexo(resultado, op);
-      break;
-      case '-':
-        resultado = subtracaoComplexos(&numA, &numB);
-        imprimeNumComplexo(resultado, op);
-      break;
-      case '*':
-        resultado = multiplicacaoComplexos(&numA, &numB);
-        imprimeNumComplexo(resultado, op);
-      break;
-      case '/':
-        resultado = divisaoComplexos(&numA, &numB);
-        imprimeNumComplexo(resultado, op);
-      break;
-      case '|':
-        resultado = moduloComplexo(&numA);
-        imprimeNumComplexo(resultado, op);
-      break;
-      default:
-        cout<< REDB <<"OPCAO INVALIDA" << NC ;
-      break;
-    }
-
-    cout<< "\n\nInforme o caractere da operação que deseja realizar ou digite (s) para sair...." <<endl;
-    cout<< "\t + p/ Adicao" <<endl;
-    cout<< "\t - p/ Subtracao" <<endl;
-    cout<< "\t * p/ Multiplicacao" <<endl;
-    cout<< "\t / p/ Divisao" <<endl;
-    cout<< "\t | p/ Modulo" <<endl;
-    cout<< "\t Operacao: ";
-    cin>>op;
-    cout<<endl;
-  }
-
-  cout<< GRN <<"\n\nFIM DA OPERACAO" << NC ;
-
-  */
+  imprimirLista (complexos);
 
 
   cout<<endl<<endl;
