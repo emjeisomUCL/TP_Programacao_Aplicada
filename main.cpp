@@ -3,10 +3,6 @@
 
 using namespace std;
 
-#define REDB "\e[41m"
-#define GRN "\e[0;32m"
-#define NC "\e[0m"
-
 struct Complexo{
   double real;
   double imag;
@@ -104,8 +100,8 @@ void leituraNumComplexo2(Complexo *numComplex){
     
     if(listaComplexos.is_open()){
 
-    listaComplexos>> numComplex -> real;
-    listaComplexos>> numComplex -> imag;
+      listaComplexos>> numComplex -> real;
+      listaComplexos>> numComplex -> imag;
 
     while(getline(listaComplexos, linha)){
 
@@ -114,9 +110,9 @@ void leituraNumComplexo2(Complexo *numComplex){
     }
 
   }else{
-    cout<< REDB <<"\nERROR AO ABRIR O ARQUIVO!"<< NC <<endl;
+    cout<< "\nERROR AO ABRIR O ARQUIVO!"<< endl;
   }
-  
+
   listaComplexos.close();
 }
 
@@ -137,16 +133,14 @@ void imprimirLista (tLista* pLista){
 
 int main()
 {
-  
   Complexo numComplex;
   tLista* complexos = new tLista;
-  string nomeDoArquivo = " ";
   int qtd = 0, index = 0;
   char op = ' ';
 
-    cout<< "\nInforme se ira gravar (g) ou ler (l) o banco de dados. \nPara sair digite (s)...";
-    cout<<"\nOpcao: ";
-    cin>>op;
+  cout<< "\nInforme se ira gravar (g) ou ler (l) o banco de dados. \nPara sair digite (s)...";
+  cout<<"\nOpcao: ";
+  cin>>op;
 
   while(op != 's' && op != 'S'){
 
@@ -164,14 +158,12 @@ int main()
         gravarNoArquivo(complexos);
       break;
       case 'l': case 'L':
-        //cout<<"Informe o nome do arquivo .txt que será lido: ";
-        //cin>>nomeDoArquivo;
         leituraNumComplexo2(&numComplex);
         incluirNoFim(complexos, numComplex);
         imprimirLista (complexos);
       break;
       default:
-        cout<< REDB <<"\nOpcao invalida!!!"<< NC <<endl;
+        cout<< "\nOpcao invalida!!!"<< endl;
       break;
     }
 
@@ -180,7 +172,7 @@ int main()
     cin>>op;
   }
 
-  cout<< GRN <<"\nFIM DA APLICACAO!"<< NC <<endl;
+  cout<< "\nFIM DA APLICACAO!"<< endl;
   cout<<endl<<endl;
   return 0;
 
