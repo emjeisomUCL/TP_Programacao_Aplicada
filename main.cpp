@@ -25,6 +25,9 @@ void leituraNumComplexo(Complexo *numComplex, int index){
   cout<<endl;
 }
 
+
+
+
 /////////////////////// LISTA ///////////////////////
 
 struct tNo{
@@ -97,61 +100,57 @@ void imprimirLista (tLista* pLista){
   }
 }
 
-void inluirNoArquivo(tLista* pLista, int index){
+void gravarNoArquivo(tLista* pLista){
   pLista -> marcador = pLista -> primeiro;
 
   ofstream listaComplexos;
-
-  listaComplexos.open ("lComplexosSaida.txt", ios::app);
-  
-  listaComplexos<<index<<" ª lista \n";
+  //listaComplexos.erase_event;
+  listaComplexos.open ("db_NumComplexos.txt");
 
   while(!finalLista(pLista)){
     Complexo informacao = pLista -> marcador -> info;
-    //cout<<"O numero comple : " << informacao.real <<" "<< informacao.imag<<"j"<<endl;
-    if(informacao.imag < 0){
-      listaComplexos<<""<< informacao.real <<" - "<< informacao.imag * -1<<"j"<<endl;
-    }else{
-      listaComplexos<<""<< informacao.real <<" + "<< informacao.imag <<"j"<<endl;
-    }
+
+    listaComplexos<< informacao.real <<" "<< informacao.imag<<endl;
     pLista -> marcador = pLista -> marcador -> proximo;
+
   }
   listaComplexos.close();
   cout<<endl;
 }
 
-void excluirPosicao(tLista* pLista, int pos){
-  tNo* anterior;
-  tNo* aux;
-  tNo* apagado;
+void leituraNumComplexo2(Complexo *numComplex){
+  
+  string linha;
+  ifstream listaComplexos;
 
-  if(!listaVazia(pLista)){
-    pLista -> marcador = pLista -> primeiro;
+  listaComplexos.open ("db_NumComplexos.txt");
 
-    if(pos < obterTamanho(pLista)){
-      if(pos == 0){
-        pLista -> primeiro = pLista -> marcador -> proximo;
-      }else{
-        for(int i = 0; i<pos; i++){
-          anterior = pLista -> marcador;
-          pLista -> marcador = pLista -> marcador -> proximo;
+  if(listaComplexos.is_open()){
 
-          aux = pLista -> marcador -> proximo;
-        }
-        anterior -> proximo = aux;
-      }
-      apagado = pLista -> marcador;
-      free(apagado);
+    listaComplexos>> numComplex -> real;
+    listaComplexos>> numComplex -> imag;
+    cout<<endl;
+
+    while(getline(listaComplexos, linha)){
+      listaComplexos>> numComplex -> real;
+      listaComplexos>> numComplex -> imag;
+      cout<<endl;
     }
-  }
-}
 
+  }else{
+    cout<< REDB <<"\nERROR AO ABRIR O ARQUIVO!"<< NC <<endl;
+  }
+
+  listaComplexos.close();
+  cout<<endl;
+}
 
 int main()
 {
   
   Complexo numComplex;
   tLista* complexos = new tLista;
+  string nomeDoArquivo = " ";
   int qtd = 0, index = 0;
   char op = ' ';
 
@@ -172,19 +171,23 @@ int main()
           leituraNumComplexo(&numComplex, i);
           incluirNoFim(complexos, numComplex);
         }
-        cout << "\nO tamanho da lista é: "<< GRN << obterTamanho(complexos)<< NC <<endl;
+        // cout << "\nO tamanho da lista é: "<< GRN << obterTamanho(complexos)<< NC <<endl;
+        // imprimirLista (complexos);
+        gravarNoArquivo(complexos);
+      break;
+      case 'l': case 'L':
+        //cout<<"Informe o nome do arquivo .txt que será lido: ";
+        //cin>>nomeDoArquivo;
+        leituraNumComplexo2(&numComplex);
+        for(int i = 0;i < 6 ;i++){
+          incluirNoFim(complexos, numComplex);
+        }
         imprimirLista (complexos);
-        index++;
       break;
       default:
         cout<< REDB <<"\nOpcao invalida!!!"<< NC <<endl;
       break;
     }
-
-
-    inluirNoArquivo(complexos, index);
-
-
 
     cout<< "\nInforme se ira gravar(g) ou ler(l) o banco de dados. \nPara sair digite (s)...";
     cout<<"\nOpcao: ";
