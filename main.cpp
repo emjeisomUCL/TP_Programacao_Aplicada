@@ -1,5 +1,5 @@
 #include <iostream>
-#include <math.h>
+#include <fstream>
 
 using namespace std;
 
@@ -17,26 +17,13 @@ void inicializaNumComplexo(Complexo *numComplex){
   numComplex->imag = 0;
 }
 
-void leituraNumComplexo(Complexo *numComplex){
-  cout<<"Componente real: ";
+void leituraNumComplexo(Complexo *numComplex, int index){
+  cout<<index<<"° Componente real: ";
   cin>> numComplex -> real;
-  cout<<"Componente imaginária: ";
+  cout<<index<<"° Componente imaginária: ";
   cin>> numComplex -> imag;
   cout<<endl;
 }
-
-/*void imprimeNumComplexo(Complexo *numComplex, char op){
-  if(op == '|'){
-    cout<<"\n"<< numComplex -> real;
-  }else{
-    if(numComplex -> imag < 0){
-      cout<<"\n"<< numComplex -> real <<" - "<< numComplex -> imag * -1<<"j"<<endl;
-    }else{
-      cout<<"\n"<< numComplex -> real <<" + "<< numComplex -> imag<<"j"<<endl;
-    }
-  }
-}*/
-
 
 /////////////////////// LISTA ///////////////////////
 
@@ -110,6 +97,29 @@ void imprimirLista (tLista* pLista){
   }
 }
 
+void inluirNoArquivo(tLista* pLista, int index){
+  pLista -> marcador = pLista -> primeiro;
+
+  ofstream listaComplexos;
+
+  listaComplexos.open ("lComplexosSaida.txt", ios::app);
+  
+  listaComplexos<<index<<" ª lista \n";
+
+  while(!finalLista(pLista)){
+    Complexo informacao = pLista -> marcador -> info;
+    //cout<<"O numero comple : " << informacao.real <<" "<< informacao.imag<<"j"<<endl;
+    if(informacao.imag < 0){
+      listaComplexos<<""<< informacao.real <<" - "<< informacao.imag * -1<<"j"<<endl;
+    }else{
+      listaComplexos<<""<< informacao.real <<" + "<< informacao.imag <<"j"<<endl;
+    }
+    pLista -> marcador = pLista -> marcador -> proximo;
+  }
+  listaComplexos.close();
+  cout<<endl;
+}
+
 void excluirPosicao(tLista* pLista, int pos){
   tNo* anterior;
   tNo* aux;
@@ -140,22 +150,51 @@ void excluirPosicao(tLista* pLista, int pos){
 int main()
 {
   
-  Complexo numA;
-
+  Complexo numComplex;
   tLista* complexos = new tLista;
+  int qtd = 0, index = 0;
+  char op = ' ';
 
-  inicializaLista(complexos);
+    cout<< "\nInforme se ira gravar (g) ou ler (l) o banco de dados. \nPara sair digite (s)...";
+    cout<<"\nOpcao: ";
+    cin>>op;
 
-  cout << "\nO tamanho da lista é: "<< obterTamanho(complexos)<<endl;
+  while(op != 's' && op != 'S'){
 
-  leituraNumComplexo(&numA);
+    inicializaLista(complexos);
 
-  incluirNoFim(complexos, numA);
+    switch(op){
 
-  cout << "\nO tamanho da lista é: "<< obterTamanho(complexos)<<endl;
-  imprimirLista (complexos);
+      case 'g': case 'G':
+        cout<< "\nQuantidade de numeros que serao gravados: ";
+        cin>>qtd;
+        for(int i = 1; i <= qtd ; i++){
+          leituraNumComplexo(&numComplex, i);
+          incluirNoFim(complexos, numComplex);
+        }
+        cout << "\nO tamanho da lista é: "<< GRN << obterTamanho(complexos)<< NC <<endl;
+        imprimirLista (complexos);
+        index++;
+      break;
+      default:
+        cout<< REDB <<"\nOpcao invalida!!!"<< NC <<endl;
+      break;
+    }
 
 
+    inluirNoArquivo(complexos, index);
+
+
+
+    cout<< "\nInforme se ira gravar(g) ou ler(l) o banco de dados. \nPara sair digite (s)...";
+    cout<<"\nOpcao: ";
+    cin>>op;
+  }
+
+  
+
+  cout<< GRN <<"\nFIM DA APLICACAO!"<< NC <<endl;
   cout<<endl<<endl;
   return 0;
+
 }
